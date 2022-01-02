@@ -1,0 +1,2 @@
+{:paths ["src"]
+ :deps {version-clj/version-clj {:mvn/version "2.0.2"}}}

@@ -1,0 +1,15 @@
+{:paths ["src"]
+ :deps {local/deps {:local/root "."}}
+ :tasks {:requires ([slim] [tasks] [editors.depsedn :as deps])
+         :init (slim/init-pwd)
+         pwd tasks/pwd
+         tagged? (if (tasks/tagged?)
+                   (println "tag is " (tasks/tag))
+                   (println "untagged " (tasks/tag)))
+         update-mvn-version (slim/cli deps/update-mvn-version
+                                      [:file :library :version]
+                                      [[nil "--version VERSION" "mvn version"]
+                                       [nil "--library LIBRARY" "library" 
+                                        :parse-fn symbol]
+                                       [nil "--file FILE" "FILE" 
+                                        :default "deps.edn"]])}}
