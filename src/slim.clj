@@ -1,19 +1,9 @@
 (ns slim
   (:require [clojure.tools.cli :refer [parse-opts]]
-            [babashka.fs :as fs]
             [clojure.string :as str]
             [doric.core :as doric]))
 
-(def ^:dynamic *pwd* nil)
 (def parameter-specs [])
-
-(defn init-pwd
-  ([pwd]
-   (alter-var-root #'*pwd* (constantly pwd)))
-  ([]
-   (if-let [pwd (System/getenv "BB_CWD")]
-     (init-pwd (fs/file pwd))
-     (init-pwd (fs/file ".")))))
 
 (declare command-vars)
 
@@ -29,6 +19,7 @@
                          "atomist.github.interface" 
                          "editors.depsedn"
                          "bb.reset-slenderslack"
+                         "pwd"
                          "slim"])
 (doseq [x namespaces-to-scan] (require (symbol x)))
 (def command-vars

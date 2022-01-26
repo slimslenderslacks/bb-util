@@ -1,6 +1,6 @@
 {:paths ["src"]
  :deps {local/deps {:local/root "."}}
- :tasks {:requires ([slim])
-         :init (slim/init-pwd)
+ :tasks {:requires ([pwd])
+         :init (pwd/init-pwd)
          cli slim/cli
          completions (slim/completions nil)}}

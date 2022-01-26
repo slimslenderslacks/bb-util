@@ -1,5 +1,5 @@
 (ns tasks
-  (:require [slim] 
+  (:require [pwd] 
             [version-clj.core :as v]
             [babashka.fs :as fs]
             [clojure.string :as s]
@@ -13,10 +13,6 @@
 (defn ^{:atomist/command "from-morse"} from-morse
   [{[s] :arguments}]
   (println (rm/morse->string s)))
-
-(defn ^{:atomist/command "pwd"} pwd 
-  [_]
-  (println slim/*pwd*))
 
 (defn increment-tag [s]
   (if (nil? s)
@@ -48,7 +44,7 @@
   []
   (let [{tag :out exit-code :exit}
         (->
-         ^{:dir slim/*pwd* :out :string} ($ git describe --tags)
+         ^{:dir pwd/*pwd* :out :string} ($ git describe --tags)
          deref)]
     (if (= 0 exit-code)
       tag
@@ -59,14 +55,14 @@
 (defn tagged? 
   "HEAD commit is tagged"
   []
-  (let [{tag :out exit-code :exit} (-> ^{:dir slim/*pwd* :out :string} ($ git describe --tags --exact-match)
+  (let [{tag :out exit-code :exit} (-> ^{:dir pwd/*pwd* :out :string} ($ git describe --tags --exact-match)
                                        deref)]
     (not (or (= "" tag) (nil? tag)))))
 
 (defn clean? 
   "check working copy"
   []
-  (let [{:keys [out]}(-> ^{:dir slim/*pwd* :out :string} ($ git status --porcelain)
+  (let [{:keys [out]}(-> ^{:dir pwd/*pwd* :out :string} ($ git status --porcelain)
       deref)]
     (or (= "" out) (nil? out))))
 
@@ -75,13 +71,13 @@
     (not (tagged?))
     (->
      (process  ["git" "commit" "-a" "--no-edit" "--amend"]
-               {:dir slim/*pwd* :out :string})
+               {:dir pwd/*pwd* :out :string})
      deref)
     (first args)
     (->
      (process (-> ["git" "commit" "-a" "-m" (first args)]
                   (concat (if (tagged?) [] ["--amend"])))
-              {:dir slim/*pwd* :out :string})
+              {:dir pwd/*pwd* :out :string})
      deref)
     :else
     (throw (ex-info "need a message" {}))))
