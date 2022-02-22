@@ -2,6 +2,7 @@
   (:require [pwd] 
             [version-clj.core :as v]
             [babashka.fs :as fs]
+            [clj-yaml.core :as yaml]
             [clojure.string :as s]
             [babashka.process :refer [$ process]]
             [remorse.core :as rm]))
@@ -80,4 +81,4 @@
               {:dir pwd/*pwd* :out :string})
      deref)
     :else
-    (throw (ex-info "need a message" {}))))
+    (throw (ex-info "first commit needs a message" {}))))
