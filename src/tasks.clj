@@ -33,12 +33,13 @@
   (increment-simple-version-tag "v1-4-gabcde")
   )
 
+(def version-snippet #":version (\d+)")
 (defn increment-version [f]
-  (spit f
-        (s/replace
-         (slurp f)
-         #":version (\d+)"
-         (fn [[_ v]] (format ":version %s" (inc (Integer/parseInt v)))))))
+  (let [content (slurp f)
+        [_ v] (re-find version-snippet content)
+        next-version (inc (Integer/parseInt v))]
+    (spit f (s/replace content version-snippet (constantly (format ":version %s" next-version))))
+    next-version))
 
 (defn describe 
   "describe current HEAD - throw if no ancestor commits have tags"
