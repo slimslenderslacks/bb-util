@@ -70,16 +70,16 @@
 
 (defn recommit-any-updates [& args]
   (cond
-    (not (tagged?))
-    (->
-     (process  ["git" "commit" "-a" "--no-edit" "--amend"]
-               {:dir pwd/*pwd* :out :string})
-     deref)
+    ; (not (tagged?))
+    ; (->
+     ; (process  ["git" "commit" "-a" "--no-edit" "--amend"]
+               ; {:dir pwd/*pwd* :out :string})
+     ; deref)
     (first args)
     (->
      (process (-> ["git" "commit" "-a" "-m" (first args)]
-                  (concat (if (tagged?) [] ["--amend"])))
+                  #_(concat (if (tagged?) [] ["--amend"])))
               {:dir pwd/*pwd* :out :string})
      deref)
     :else
-    (throw (ex-info "first commit needs a message" {}))))
+    (throw (ex-info "commit needs a message" {}))))

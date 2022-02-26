@@ -18,6 +18,7 @@
 (def namespaces-to-scan ["tasks" 
                          "atomist.github.interface" 
                          "editors.depsedn"
+                         "editors.leiningen"
                          "bb.reset-slenderslack"
                          "pwd"
                          "slim"])
