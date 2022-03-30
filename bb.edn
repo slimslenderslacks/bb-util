@@ -1,4 +1,4 @@
-{:paths ["src"]
+{:paths ["src" "dev"]
  :deps {local/deps {:local/root "."}}
  :tasks {:requires ([pwd])
          :init (pwd/init-pwd)

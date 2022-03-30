@@ -26,21 +26,25 @@
 (defn increment-simple-version-tag [s]
   (if (nil? s)
     "v1"
-    (when-let [[_ previous-version] (re-find #"v(\d+)-\d+-g[a-z,0-9]+" s)]
-      (str "v" (inc (Integer/parseInt previous-version))))))
+    (if-let [[_ previous-version] (re-find #"v(\d+)-\d+-g[a-z,0-9]+" s)]
+      (str "v" (inc (Integer/parseInt previous-version)))
+      (when-let [[_ previous-version] (re-find #"v(\d+)" s)]
+        (str "v" (inc (Integer/parseInt previous-version)))))))
 
 (comment
-  (increment-simple-version-tag "v1-4-gabcde")
-  )
+  (increment-simple-version-tag "v1-4-gabcde"))
 
-(def version-snippet #":version (\d+)")
+(def version-snippet #":version \"?v?(\d+)\"?")
 (defn increment-version [f]
   (let [content (slurp f)
         [_ v] (re-find version-snippet content)
         next-version (inc (Integer/parseInt v))]
     (spit f (s/replace content version-snippet (constantly (format ":version %s" next-version))))
     next-version))
-
+(defn set-version [f next-version]
+  (let [content (slurp f)]
+    (spit f (s/replace content version-snippet (constantly (format ":version \"%s\"" next-version))))
+    next-version))
 (defn describe 
   "describe current HEAD - throw if no ancestor commits have tags"
   []

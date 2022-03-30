@@ -85,7 +85,7 @@
       (-> response :body (json/->obj) :number)
       response)))
 
-(defn- query-github [cli-options query variables]
+(defn query-github [cli-options query variables]
   (let [response (curl/post "https://api.github.com/graphql"
                             {:headers (v4-headers cli-options)
                              :body (json/->str 
